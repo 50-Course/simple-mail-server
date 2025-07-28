@@ -7,7 +7,7 @@ import (
 )
 
 // Uses the stdout to simulate sending an email jjust like Django's ConsoleEmailBackend
-func sendMail(job model.EmailJob) {
+func SendMail(job model.EmailJob) {
 	log.Printf("Sending email to %s | Subject: %s", job.To, job.Subject)
 	time.Sleep(1 * time.Second)
 	log.Printf("Email sent to %s", job.To)
