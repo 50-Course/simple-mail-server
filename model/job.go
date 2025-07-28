@@ -34,7 +34,7 @@ type EmailJob struct {
 var emailPattern = regexp.MustCompile(`^[\w\.-]+@[\w\.-]+\.\w+$`)
 
 // Ensures required fields are present and email is valid
-func validateJob(req JobRequest) error {
+func ValidateJob(req JobRequest) error {
 	if req.To == "" || req.Subject == "" || req.Body == "" {
 		return ErrRequiredFields
 	}
@@ -43,4 +43,3 @@ func validateJob(req JobRequest) error {
 	}
 	return nil
 }
-
