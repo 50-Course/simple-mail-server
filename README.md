@@ -20,6 +20,15 @@
 
 ```
 
+## Gallery
+
+<p align="center">
+  <img width="680" height="128" alt="image" src="https://github.com/user-attachments/assets/3eb5421f-1d8d-4162-a7d3-a0a5446474ed" />
+  <img width="687" height="124" alt="image" src="https://github.com/user-attachments/assets/21bd1ca6-908f-4440-969d-0224b51169c9" />
+
+</p>
+
+
 ## Usage
 
 ### Run the service
