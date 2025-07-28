@@ -74,14 +74,23 @@ func main() {
 		port      = flag.String("port", "8080", "HTTP port to listen on")
 		queueSize = flag.Int("queue-size", 10, "Size of the job queue")
 		workerNum = flag.Int("workers", 3, "Number of concurrent workers to use")
+		queueType = flag.String("queue-type", "memory", "Queue type: memory or rabbitmq")
 	)
 	flag.Parse()
 
 	log.Printf("Starting Email Service on port %s with %d workers and queue size %d", *port, *workerNum, *queueSize)
 
+	if *queueType != "memory" && *queueType != "rabbitmq" {
+		//TODO: Implement RabbitMQ connector later
+		// this would connect to RabbitMQ and use it as a queue through the queue.rabbitmq package
+		log.Fatalf("Unsupported queue type: %s. Supported types are: memory, rabbitmq", *queueType)
+	}
+
+	// for now, we are using an in-memory queue
 	jobQueue := &queue.InMemoryQueue{
-		jobs: make(chan model.EmailJob, *queueSize), // here we are using a buffered channel allows us to limit queue size
-		open: true,
+		// we are using a buffered channel allows us to limit queue size^
+		Jobs: make(chan model.EmailJob, *queueSize),
+		Open: true,
 	}
 
 	var workerWg sync.WaitGroup
@@ -89,7 +98,7 @@ func main() {
 
 	// here, we start for the specified number of workers
 	for i := 0; i < *workerNum; i++ {
-		worker.StartWorker(i+1, jobQueue.jobs, &workerWg)
+		worker.StartWorker(i+1, jobQueue.Jobs, &workerWg)
 	}
 
 	mux := http.NewServeMux()

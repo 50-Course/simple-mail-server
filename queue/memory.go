@@ -15,11 +15,11 @@ type InMemoryQueue struct {
 	// A mutex to ensure thread-safe operations
 	mu sync.Mutex
 
-	// A flag to indicate if the queue is open for new jobs
-	open bool
+	// A flag to indicate if the queue is Open for new jobs
+	Open bool
 
-	// A channel to hold the email jobs
-	jobs chan model.EmailJob
+	// A channel to hold the email Jobs
+	Jobs chan model.EmailJob
 }
 
 // adds a job to the in-memory queue
@@ -34,12 +34,12 @@ func (q *InMemoryQueue) Enqueue(job model.EmailJob) error {
 	q.mu.Lock()
 	defer q.mu.Unlock()
 
-	if !q.open {
+	if !q.Open {
 		return ErrQueueClosed
 	}
 
 	select {
-	case q.jobs <- job:
+	case q.Jobs <- job:
 		return nil
 	default:
 		return ErrQueueFull
@@ -51,6 +51,6 @@ func (q *InMemoryQueue) Enqueue(job model.EmailJob) error {
 func (q *InMemoryQueue) Close() {
 	q.mu.Lock()
 	defer q.mu.Unlock()
-	q.open = false
-	close(q.jobs)
+	q.Open = false
+	close(q.Jobs)
 }
