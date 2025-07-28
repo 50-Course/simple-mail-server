@@ -23,6 +23,11 @@ func SendEmailHandler(q *queue.InMemoryQueue) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req model.JobRequest
 
+		if r.Method != http.MethodPost {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			http.Error(w, "Invalid JSON", http.StatusBadRequest)
 			return
